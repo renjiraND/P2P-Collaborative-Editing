@@ -3,7 +3,6 @@ package com.collaborativeediting.app;
 import java.util.ArrayList;
 import java.util.List;
 
-//kelas ini memiliki fungsi untuk melakukan operasi terhadap CRDT baik itu insert maupun delete dan melakukan update terhadap struktur datanya
 public class CRDT {
     private List<Character> characters = new ArrayList<>();
     private int id;

@@ -1,5 +1,7 @@
 package com.collaborativeediting.view;
 
+import com.collaborativeediting.app.CRDT;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -12,8 +14,13 @@ public class MainFrame {
 
     private int cursorIdx;
     private int charCount;
+    private int siteId = 0;
+
+    private CRDT crdt;
 
     public MainFrame() {
+        crdt = new CRDT(siteId);
+
         frame = new JFrame("P2P Collaborative Editor");
         frame.setSize(600, 600);
         frame.setLocationRelativeTo(null);
@@ -88,23 +95,36 @@ public class MainFrame {
         public void keyPressed(KeyEvent e) {
             int keyCode = e.getKeyCode();
             switch (keyCode) {
-                case KeyEvent.VK_LEFT:
+                case KeyEvent.VK_LEFT:          // left arrow
                     cursorIdx = (cursorIdx > 0) ? (cursorIdx-1) : 0;
                     break;
-                case KeyEvent.VK_RIGHT:
+                case KeyEvent.VK_RIGHT:         // right arrow
                     cursorIdx = (cursorIdx < charCount) ? (cursorIdx+1) : cursorIdx;
                     break;
-                case KeyEvent.VK_UP:
+                case KeyEvent.VK_UP:            // up arrow
                     cursorIdx = 0;
                     textAreaEditor.setCaretPosition(cursorIdx);
-                case KeyEvent.VK_BACK_SPACE:
-                    charCount = (charCount > 0) ? (charCount-1) : 0;
-                    cursorIdx = (cursorIdx > 0) ? (cursorIdx-1) : 0;
                     break;
-                case KeyEvent.VK_DELETE:
+                case KeyEvent.VK_DOWN:          // down arrow
+                    cursorIdx = charCount;
+                    textAreaEditor.setCaretPosition(cursorIdx);
+                    break;
+                case KeyEvent.VK_BACK_SPACE:    // backspace
+                    if (cursorIdx > 0) {
+                        charCount--;
+                        cursorIdx--;
+                        crdt.delete(cursorIdx);
+                    }
+                    break;
+                case KeyEvent.VK_DELETE:        // delete
+                    if (cursorIdx < charCount) {
+                        charCount--;
+                        crdt.delete(cursorIdx);
+                    }
+                    break;
                 default:
-                    if (isValidChar(keyCode)) {
-                        char inputChar = e.getKeyChar();
+                    if (isValidChar(keyCode)) { // alphabet, digit, space
+                        crdt.insert(e.getKeyChar(), cursorIdx);
                         charCount++;
                         cursorIdx++;
                     }
@@ -117,7 +137,8 @@ public class MainFrame {
 
         private boolean isValidChar(int keycode) {
             return (48 <= keycode) && (keycode <= 57)   // digit
-                || (65 <= keycode) && (keycode <= 90);  // alphabet
+                || (65 <= keycode) && (keycode <= 90)   // alphabet
+                || (keycode == 32);                     // space
         }
     }
 }

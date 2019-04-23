@@ -2,12 +2,12 @@ package com.collaborativeediting.app;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ListIterator;
 
 //kelas ini memiliki fungsi untuk melakukan operasi terhadap CRDT baik itu insert maupun delete dan melakukan update terhadap struktur datanya
 public class CRDT {
     private List<Character> characters = new ArrayList<>();
     private int id;
+    private int counter = 0;
 
     public CRDT(int sideId) {
         this.id = sideId;
@@ -21,12 +21,15 @@ public class CRDT {
         return this.characters.get(idx);
     }
 
+    public String getString() {
+        StringBuilder charInString = new StringBuilder(this.characters.size());
+        for (Character c: characters) {
+            charInString.append(c.getValue());
+        }
+        return charInString.toString();
+    }
+
     public void printCharacters() {
-//        ListIterator litr = this.characters.listIterator();
-//        while (litr.hasNext()) {
-//            Character c = (Character) litr.next();
-//            System.out.println("char: " + c.getValue() + "; position: " + c.getPosition());
-//        }
         for (Character c: characters) {
             System.out.println("char: " + c.getValue() + "; position: " + c.getPosition());
         }
@@ -34,18 +37,20 @@ public class CRDT {
     }
 
     public void insert(char c, int position) {
+        counter++;
         if (position == getCharactersCount()) {
             this.characters.add(position, new Character(c, position+1));
         } else if (position == 0) {
             this.characters.add(position, new Character(c, getCharacter(0).getPosition() / 2));
         } else {
-            float newPosition = (getCharacter(position-1).getPosition() + getCharacter(position).getPosition()) / 2;
+            double newPosition = (getCharacter(position-1).getPosition() + getCharacter(position).getPosition()) / 2;
             this.characters.add(position, new Character(c, newPosition));
         }
         printCharacters();
     }
 
     public void delete(int position) {
+        counter++;
         this.characters.remove(position);
         printCharacters();
     }
@@ -56,11 +61,13 @@ public class CRDT {
 
     public class Character {
         private int siteId;
+        private int siteCounter;
         private char value;
-        private float position;
+        private double position;
 
-        public Character(char value, float position) {
+        public Character(char value, double position) {
             this.siteId = id;
+            this.siteCounter = counter;
             this.value = value;
             this.position = position;
         }
@@ -69,11 +76,15 @@ public class CRDT {
             return siteId;
         }
 
+        public int getSiteCounter() {
+            return siteCounter;
+        }
+
         public char getValue() {
             return value;
         }
 
-        public float getPosition() {
+        public double getPosition() {
             return position;
         }
     }

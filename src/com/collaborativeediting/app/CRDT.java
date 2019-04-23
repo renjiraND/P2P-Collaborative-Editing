@@ -12,6 +12,10 @@ public class CRDT {
         this.id = sideId;
     }
 
+    public List<Character> getCharacters() {
+        return this.characters;
+    }
+
     private int getCharactersCount() {
         return this.characters.size();
     }
@@ -48,9 +52,32 @@ public class CRDT {
         printCharacters();
     }
 
+    public double generatePos(int position) {
+        if (position == getCharactersCount()) {
+            return position+1;
+        } else if (position == 0) {
+            return getCharacter(0).getPosition() / 2;
+        } else {
+            double newPosition = (getCharacter(position-1).getPosition() + getCharacter(position).getPosition()) / 2;
+            return newPosition;
+        }
+    }
+
+    public void insertChar(Character c, int position) {
+        counter++;
+        this.characters.add(position, c);
+        printCharacters();
+    }
+
     public void delete(int position) {
         counter++;
         this.characters.remove(position);
+        printCharacters();
+    }
+
+    public void deleteChar(Character c) {
+        counter++;
+        this.characters.remove(c);
         printCharacters();
     }
 
@@ -86,5 +113,6 @@ public class CRDT {
         public double getPosition() {
             return position;
         }
+
     }
 }

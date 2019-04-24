@@ -1,6 +1,7 @@
 package com.collaborativeediting.view;
 
 import com.collaborativeediting.app.CRDT;
+import com.collaborativeediting.app.Controller;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,13 +15,10 @@ public class MainFrame {
 
     private int cursorIdx;
     private int charCount;
-    private int siteId = 0;
 
-    private CRDT crdt;
+    private Controller controller = new Controller();
 
     public MainFrame() {
-        crdt = new CRDT(siteId);
-
         frame = new JFrame("P2P Collaborative Editor");
         frame.setSize(600, 600);
         frame.setLocationRelativeTo(null);
@@ -113,18 +111,24 @@ public class MainFrame {
                     if (cursorIdx > 0) {
                         charCount--;
                         cursorIdx--;
-                        crdt.delete(cursorIdx);
+                        CRDT.Character ch = controller.getCRDT().getCharacters().get(cursorIdx);
+                        controller.getCRDT().deleteChar(ch);
+//                        controller.getCRDT().delete(cursorIdx);
                     }
                     break;
                 case KeyEvent.VK_DELETE:        // delete
                     if (cursorIdx < charCount) {
                         charCount--;
-                        crdt.delete(cursorIdx);
+                        CRDT.Character ch = controller.getCRDT().getCharacters().get(cursorIdx);
+                        controller.getCRDT().deleteChar(ch);
+//                        controller.getCRDT().delete(cursorIdx);
                     }
                     break;
                 default:
                     if (isValidChar(keyCode)) { // alphabet, digit, space
-                        crdt.insert(e.getKeyChar(), cursorIdx);
+//                        controller.getCRDT().insert(e.getKeyChar(), cursorIdx);
+                        CRDT.Character ch = controller.getCRDT().new Character(e.getKeyChar(), controller.getCRDT().generatePos(cursorIdx));
+                        controller.getCRDT().insertChar(ch, cursorIdx);
                         charCount++;
                         cursorIdx++;
                     }

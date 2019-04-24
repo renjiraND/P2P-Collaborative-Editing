@@ -83,7 +83,7 @@ public class CRDT {
     }
 
     public Command stringToCommand(String str) {
-        String[] parsed = str.split(";");
+        String[] parsed = str.split("-");
         int type = Integer.parseInt(parsed[0]);
         int siteId = Integer.parseInt(parsed[1]);
         int siteCounter = Integer.parseInt(parsed[2]);

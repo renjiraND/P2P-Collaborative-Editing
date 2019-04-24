@@ -13,7 +13,7 @@ public class Controller {
 
     private GUIFrame frame;
     private CRDT crdt;
-    private ArrayList<CRDT.Character> deleteBuffer = new ArrayList<>();
+    private ArrayList<CRDT.Character> deletionBuffer = new ArrayList<>();
 
     public Controller() {
         this.siteId = 1;                // ini hrsnya nanti dpt dari connection
@@ -24,23 +24,23 @@ public class Controller {
         return crdt;
     }
 
-    public void addDeleteBuffer(CRDT.Character c) {
-        this.deleteBuffer.add(c);
+    public void addDeletionBuffer(CRDT.Character c) {
+        this.deletionBuffer.add(c);
     }
 
-    public void updateDeleteBuffer(CRDT.Character targetChar) {
-        boolean isUpdated = false;
-        ListIterator litr = this.deleteBuffer.listIterator();
-        while (litr.hasNext() || (!isUpdated)) {
-            CRDT.Character crntChar = (CRDT.Character) litr.next();
-            if (crntChar.getValue() == targetChar.getValue()
-                && crntChar.getPosition() == targetChar.getPosition()
-                && crntChar.getSiteId() == targetChar.getSiteId()
-                && crntChar.getSiteCounter() > targetChar.getSiteCounter())
-            {
-                this.crdt.deleteChar(crntChar);
-                this.deleteBuffer.remove(crntChar);
-                isUpdated = true;
+    public void updateDeletionBuffer() {
+        if (!this.deletionBuffer.isEmpty()) {
+            for (CRDT.Character c: this.deletionBuffer) {
+                boolean found = false;
+                ListIterator litr = this.crdt.getCharacters().listIterator();
+                while (litr.hasNext() && !found) {
+                    CRDT.Character currentChar = (CRDT.Character) litr.next();
+                    if (c.isEqualTo(currentChar)) {
+                        this.crdt.deleteChar(currentChar);
+                        this.deletionBuffer.remove(c);
+                        found = true;
+                    }
+                }
             }
         }
     }

@@ -114,5 +114,15 @@ public class CRDT {
             return position;
         }
 
+        /*
+         * comparison for Deletion Buffer
+         * c : Character that will be deleted
+         */
+        public boolean isEqualTo(Character c) {
+            return this.value == c.getValue()
+                && this.position == c.getPosition()
+                && this.siteId == c.getSiteId()
+                && this.siteCounter > c.getSiteCounter();
+        }
     }
 }

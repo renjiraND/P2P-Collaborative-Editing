@@ -23,7 +23,7 @@ public class GUIFrame extends JFrame {
         this.setResizable(false);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        panel = new JPanel(new GridBagLayout(), true);
+        this.panel = new JPanel(new GridBagLayout(), true);
         GridBagConstraints cst = new GridBagConstraints();
 
         /*** title label ***/
@@ -32,15 +32,15 @@ public class GUIFrame extends JFrame {
         cst.fill = GridBagConstraints.CENTER;
         cst.gridx = 0;
         cst.gridy = 0;
-        panel.add(labelTitle, cst);
+        this.panel.add(labelTitle, cst);
 
         /*** text editor ***/
-        textAreaEditor = new JTextArea(5, 50);
-        textAreaEditor.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 16));
-        textAreaEditor.setLineWrap(true);
-        textAreaEditor.setFocusable(true);
-        textAreaEditor.addKeyListener(keyEditorListener);
-        textAreaEditor.addMouseListener(new MouseListener() {
+        this.textAreaEditor = new JTextArea(5, 50);
+        this.textAreaEditor.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 16));
+        this.textAreaEditor.setLineWrap(true);
+        this.textAreaEditor.setFocusable(true);
+        this.textAreaEditor.addKeyListener(keyEditorListener);
+        this.textAreaEditor.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 textAreaEditor.setCaretPosition(charCount);
@@ -55,22 +55,22 @@ public class GUIFrame extends JFrame {
             public void mouseExited(MouseEvent e) { }
         });
 
-        JScrollPane editorScrollPane = new JScrollPane(textAreaEditor);
+        JScrollPane editorScrollPane = new JScrollPane(this.textAreaEditor);
         editorScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         editorScrollPane.setPreferredSize(new Dimension(600, 200));
         cst.fill = GridBagConstraints.HORIZONTAL;
         cst.gridx = 0;
         cst.gridy = 1;
-        panel.add(editorScrollPane, cst);
+        this.panel.add(editorScrollPane, cst);
 
         /*** character index label ***/
         cursorIdx = 0; charCount = 0;
-        labelCursorIdx = new JLabel("Cursor position: " + cursorIdx + " | Character count: " + charCount);
-        labelCursorIdx.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 12));
+        this.labelCursorIdx = new JLabel("Cursor position: " + this.cursorIdx + " | Character count: " + this.charCount);
+        this.labelCursorIdx.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 12));
         cst.fill = GridBagConstraints.CENTER;
         cst.gridx = 0;
         cst.gridy = 2;
-        panel.add(labelCursorIdx, cst);
+        this.panel.add(labelCursorIdx, cst);
 
         /*** frame final setup ***/
         this.add(panel);
@@ -79,7 +79,7 @@ public class GUIFrame extends JFrame {
     }
 
     public int getCursorIdx() {
-        return cursorIdx;
+        return this.cursorIdx;
     }
 
     public void setCursorIdx(int cursorIdx) {
@@ -87,7 +87,7 @@ public class GUIFrame extends JFrame {
     }
 
     public int getCharCount() {
-        return charCount;
+        return this.charCount;
     }
 
     public void setCharCount(int charCount) {
@@ -95,10 +95,14 @@ public class GUIFrame extends JFrame {
     }
 
     public void setCursorPosition() {
-        textAreaEditor.setCaretPosition(this.cursorIdx);
+        this.textAreaEditor.setCaretPosition(this.cursorIdx);
     }
 
     public void updateFooter() {
-        labelCursorIdx.setText("Cursor position: " + cursorIdx + " | Character count: " + charCount);
+        this.labelCursorIdx.setText("Cursor position: " + cursorIdx + " | Character count: " + charCount);
+    }
+
+    public void removeChar(int position) {
+        this.textAreaEditor.replaceRange("", position, position+1);
     }
 }

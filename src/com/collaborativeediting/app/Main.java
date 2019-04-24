@@ -18,6 +18,8 @@ public class Main {
         Thread menu = new Menu(messenger);
         menu.start();
 
+        Controller controller = new Controller();
+        controller.run();
     }
 
 }

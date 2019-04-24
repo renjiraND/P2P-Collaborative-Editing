@@ -24,11 +24,11 @@ public class Controller {
         return crdt;
     }
 
-    public void addDeleteBuffer(CRDT.Character c) {
+    public void addDeletionBuffer(CRDT.Character c) {
         this.deletionBuffer.add(c);
     }
 
-    public void updateDeleteBuffer() {
+    public void updateDeletionBuffer() {
         if (!this.deletionBuffer.isEmpty()) {
             for (CRDT.Character c: this.deletionBuffer) {
                 boolean found = false;

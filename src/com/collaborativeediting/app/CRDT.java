@@ -34,7 +34,8 @@ public class CRDT {
 
     public void printCharacters() {
         for (Character c: characters) {
-            System.out.println("char: " + c.getValue() + "; position: " + c.getPosition());
+            System.out.println("char: " + c.getValue() + "; position: " + c.getPosition()
+                + "; site: " + c.getSiteId() + "; counter: " + c.getSiteCounter());
         }
         System.out.println();
     }
@@ -58,8 +59,7 @@ public class CRDT {
         } else if (position == 0) {
             return getCharacter(0).getPosition() / 2;
         } else {
-            double newPosition = (getCharacter(position-1).getPosition() + getCharacter(position).getPosition()) / 2;
-            return newPosition;
+            return  (getCharacter(position-1).getPosition() + getCharacter(position).getPosition()) / 2;
         }
     }
 

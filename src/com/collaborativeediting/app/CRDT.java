@@ -82,7 +82,7 @@ public class CRDT {
         printCharacters();
     }
 
-    public Command stringToCommand(String str) {
+    public Message decode(String str) {
         String[] parsed = str.split("-");
         int type = Integer.parseInt(parsed[0]);
         int siteId = Integer.parseInt(parsed[1]);
@@ -90,16 +90,16 @@ public class CRDT {
         char value = parsed[3].charAt(0);
         double position = Double.parseDouble(parsed[4]);
         Character c = new Character(siteId, siteCounter, value, position);
-        Command comm = new Command(c, type);
-        return comm;
+        Message msg = new Message(c, type);
+        return msg;
     }
 
-    public String commandToString(Command comm) {
-        String strType = Integer.toString(comm.getType());
-        String siteId = Integer.toString(comm.getCharacter().getSiteId());
-        String siteCounter = Integer.toString(comm.getCharacter().getSiteCounter());
-        String value = java.lang.Character.toString(comm.getCharacter().getValue());
-        String position = Double.toString(comm.getCharacter().getPosition());
+    public String encode(Message msg) {
+        String strType = Integer.toString(msg.getType());
+        String siteId = Integer.toString(msg.getCharacter().getSiteId());
+        String siteCounter = Integer.toString(msg.getCharacter().getSiteCounter());
+        String value = java.lang.Character.toString(msg.getCharacter().getValue());
+        String position = Double.toString(msg.getCharacter().getPosition());
         String result = String.join("-", strType, siteId, siteCounter, value, position);
         System.out.println(result);
         return result;
@@ -143,11 +143,11 @@ public class CRDT {
 
     }
 
-    public class Command {
+    public class Message {
         private Character character;
         private int type;
 
-        public Command(Character character, int type) {
+        public Message(Character character, int type) {
             this.character = character;
             this.type = type;
         }

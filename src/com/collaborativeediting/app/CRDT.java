@@ -1,5 +1,6 @@
 package com.collaborativeediting.app;
 
+import javax.smartcardio.CommandAPDU;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -81,8 +82,27 @@ public class CRDT {
         printCharacters();
     }
 
-    public void update() {
-        // belum
+    public Command stringToCommand(String str) {
+        String[] parsed = str.split(";");
+        int type = Integer.parseInt(parsed[0]);
+        int siteId = Integer.parseInt(parsed[1]);
+        int siteCounter = Integer.parseInt(parsed[2]);
+        char value = parsed[3].charAt(0);
+        double position = Double.parseDouble(parsed[4]);
+        Character c = new Character(siteId, siteCounter, value, position);
+        Command comm = new Command(c, type);
+        return comm;
+    }
+
+    public String commandToString(Command comm) {
+        String strType = Integer.toString(comm.getType());
+        String siteId = Integer.toString(comm.getCharacter().getSiteId());
+        String siteCounter = Integer.toString(comm.getCharacter().getSiteCounter());
+        String value = java.lang.Character.toString(comm.getCharacter().getValue());
+        String position = Double.toString(comm.getCharacter().getPosition());
+        String result = String.join("-", strType, siteId, siteCounter, value, position);
+        System.out.println(result);
+        return result;
     }
 
     public class Character {
@@ -94,6 +114,13 @@ public class CRDT {
         public Character(char value, double position) {
             this.siteId = id;
             this.siteCounter = counter;
+            this.value = value;
+            this.position = position;
+        }
+
+        public Character(int siteId, int siteCounter, char value, double position) {
+            this.siteId = siteId;
+            this.siteCounter = siteCounter;
             this.value = value;
             this.position = position;
         }
@@ -114,5 +141,23 @@ public class CRDT {
             return position;
         }
 
+    }
+
+    public class Command {
+        private Character character;
+        private int type;
+
+        public Command(Character character, int type) {
+            this.character = character;
+            this.type = type;
+        }
+
+        public Character getCharacter() {
+            return character;
+        }
+
+        public int getType() {
+            return type;
+        }
     }
 }

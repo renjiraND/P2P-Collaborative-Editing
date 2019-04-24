@@ -2,11 +2,20 @@
 
 *Collaborative Editing* ini menggunakan ***Conflict-free Replicated Data Type (CRDT)***
 
+Oleh:
+- 13516014 - Renjira Naufhal Dhiaegana
+- 13516017 - Muhammad Nurraihan Naufal
+- 13516134 - Shevalda Gracielira 
+
 ## Petunjuk Penggunaan Program
 
 
 ## Pembagian Tugas
-
+| NIM      | Persentase Pengerjaan | Deskripsi Singkat                 |
+| -------- | --------------------- | --------------------------------- |
+| 13516014 |                       | Version, VersionVector, Messenger |
+| 13516017 |                       | CRDT, Laporan                     |
+| 13516134 |                       | Controller, GUIFrame              |
 
 ## Laporan
 
@@ -14,6 +23,7 @@
 
 *Jelaskan cara kerja program kalian beserta desain program (arsitektur program). Berikan ilustrasi jika perlu.*
 
+Program kami terdiri dari kelas Controller, CRDT, Main, Messenger, Version, dan VersionVector.
 
 ### Penjelasan Fungsi
 

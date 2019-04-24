@@ -145,7 +145,7 @@ public class CRDT {
 
     public class Message {
         private Character character;
-        private int type;
+        private int type; // 1 = Insert, 2 = Delete
 
         public Message(Character character, int type) {
             this.character = character;

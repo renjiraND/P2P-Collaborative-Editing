@@ -7,9 +7,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class MainFrame {
-    private JFrame frame;
-    private JPanel panelMain;
+public class MainFrame extends JFrame {
+    private JPanel panel;
     private JTextArea textAreaEditor;
     private JLabel labelCursorIdx;
 
@@ -19,13 +18,15 @@ public class MainFrame {
     private Controller controller = new Controller();
 
     public MainFrame() {
-        frame = new JFrame("P2P Collaborative Editor");
-        frame.setSize(600, 600);
-        frame.setLocationRelativeTo(null);
-        frame.setResizable(false);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        super();
+        
+        this.setTitle("P2P Collaborative Editor");
+        this.setSize(600, 600);
+        this.setLocationRelativeTo(null);
+        this.setResizable(false);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        panelMain = new JPanel(new GridBagLayout(), true);
+        panel = new JPanel(new GridBagLayout(), true);
         GridBagConstraints cst = new GridBagConstraints();
 
         /*** title label ***/
@@ -34,7 +35,7 @@ public class MainFrame {
         cst.fill = GridBagConstraints.CENTER;
         cst.gridx = 0;
         cst.gridy = 0;
-        panelMain.add(labelTitle, cst);
+        panel.add(labelTitle, cst);
 
         /*** text editor ***/
         textAreaEditor = new JTextArea(5, 50);
@@ -57,13 +58,13 @@ public class MainFrame {
             public void mouseExited(MouseEvent e) { }
         });
 
-        JScrollPane editorScollPane = new JScrollPane(textAreaEditor);
-        editorScollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        editorScollPane.setPreferredSize(new Dimension(600, 200));
+        JScrollPane editorScrollPane = new JScrollPane(textAreaEditor);
+        editorScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        editorScrollPane.setPreferredSize(new Dimension(600, 200));
         cst.fill = GridBagConstraints.HORIZONTAL;
         cst.gridx = 0;
         cst.gridy = 1;
-        panelMain.add(editorScollPane, cst);
+        panel.add(editorScrollPane, cst);
 
         /*** character index label ***/
         cursorIdx = 0; charCount = 0;
@@ -72,12 +73,12 @@ public class MainFrame {
         cst.fill = GridBagConstraints.CENTER;
         cst.gridx = 0;
         cst.gridy = 2;
-        panelMain.add(labelCursorIdx, cst);
+        panel.add(labelCursorIdx, cst);
 
         /*** frame final setup ***/
-        frame.add(panelMain);
-        frame.pack();
-        frame.setVisible(true);
+        this.add(panel);
+        this.pack();
+        this.setVisible(true);
     }
 
     private void updateFooter() {

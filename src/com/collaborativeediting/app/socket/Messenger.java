@@ -18,6 +18,10 @@ public class Messenger {
         this.listener = new Listener(this,(Server) this.myServer);
     }
 
+    public Thread getMyServer() {
+        return myServer;
+    }
+
     public void initialize() {
         this.listener.start();
         this.myServer.start();

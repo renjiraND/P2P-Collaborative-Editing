@@ -16,6 +16,7 @@ public class Server extends Thread
     private Integer serverPort;
     private String receiveBuffer;
     private volatile Integer incomingClient;
+    private volatile String command;
 
     public Server() {
         this.receiveBuffer = "";
@@ -96,6 +97,8 @@ public class Server extends Thread
         return receiveBuffer;
     }
 
+    public void clearReceiveBuffer() { this.receiveBuffer = null; }
+
     public void setServerPort(Integer serverPort) {
         this.serverPort = serverPort;
     }
@@ -110,6 +113,18 @@ public class Server extends Thread
 
     public void clearIncomingClient() {
         this.incomingClient = null;
+    }
+
+    public String getCommand() {
+        return command;
+    }
+
+    public void setCommand(String command) {
+        this.command = command;
+    }
+
+    public void clearCommand() {
+        this.command = null;
     }
 }
 
@@ -148,10 +163,12 @@ class ClientHandler extends Thread
                 }else if(myServer.getReceiveBuffer().equals("message_buffer")){
                     myServer.setReceiveBuffer(dis.readUTF());
                     System.out.println(myServer.getReceiveBuffer());
+                    myServer.setCommand(myServer.getReceiveBuffer());
                 }else if(myServer.getReceiveBuffer().equals("port_number")){
                     Integer port = Integer.parseInt(dis.readUTF());
                     this.myServer.setIncomingClient(port);
                 }
+                myServer.clearCommand();
 
             } catch (IOException e) {
             }

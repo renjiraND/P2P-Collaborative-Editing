@@ -1,5 +1,7 @@
 package com.collaborativeediting.app;
 
+import com.collaborativeediting.app.socket.Messenger;
+import com.collaborativeediting.app.socket.Server;
 import com.collaborativeediting.view.GUIFrame;
 
 import javax.swing.*;
@@ -14,10 +16,13 @@ public class Controller {
     private GUIFrame frame;
     private CRDT crdt;
     private ArrayList<CRDT.Character> deletionBuffer = new ArrayList<>();
+    private Messenger messenger;
+    private String commandBuffer;
 
-    public Controller() {
+    public Controller(Messenger messenger) {
         this.siteId = 1;                // ini hrsnya nanti dpt dari connection
         this.crdt = new CRDT(1);
+        this.messenger = messenger;
     }
 
     public CRDT getCRDT() {
@@ -47,6 +52,16 @@ public class Controller {
 
     public void run() {
         SwingUtilities.invokeLater(() -> this.frame = new GUIFrame(new KeyEditorListener()));
+        Thread t = new CommandListener(this.messenger,this);
+        t.start();
+    }
+
+    public void setCommandBuffer(String commandBuffer) {
+        this.commandBuffer = commandBuffer;
+    }
+
+    public String getCommandBuffer() {
+        return commandBuffer;
     }
 
     /*** CLASS ***/
@@ -85,6 +100,7 @@ public class Controller {
                         frame.setCursorIdx(frame.getCursorIdx()-1);
                         CRDT.Character ch = crdt.getCharacters().get(frame.getCursorIdx());
                         crdt.deleteChar(ch);
+                        messenger.broadcast(crdt.encode(crdt.new Message(ch, 2)));
                     }
                     break;
                 case KeyEvent.VK_DELETE:        // delete
@@ -93,12 +109,14 @@ public class Controller {
                         frame.setCharCount(frame.getCharCount()-1);
                         CRDT.Character ch = crdt.getCharacters().get(frame.getCursorIdx());
                         crdt.deleteChar(ch);
+                        messenger.broadcast(crdt.encode(crdt.new Message(ch, 2)));
                     }
                     break;
                 default:
                     if (isValidChar(keyCode)) { // alphabet, digit, space
                         CRDT.Character ch = crdt.new Character(e.getKeyChar(), crdt.generatePos(frame.getCursorIdx()));
                         crdt.insertChar(ch, frame.getCursorIdx());
+                        messenger.broadcast(crdt.encode(crdt.new Message(ch, 1)));
                         frame.setCharCount(frame.getCharCount()+1);
                         frame.setCursorIdx(frame.getCursorIdx()+1);
                     }
@@ -116,4 +134,31 @@ public class Controller {
         }
     }
 
+}
+
+class CommandListener extends Thread {
+    final Messenger messenger;
+    final Controller controller;
+
+    public CommandListener(Messenger messenger, Controller controller) {
+        this.messenger = messenger;
+        this.controller = controller;
+    }
+
+    @Override
+    public void run() {
+        Server s = (Server)messenger.getMyServer();
+        while (true) {
+            if (s.getCommand() != null) {
+                CRDT.Message msg = controller.getCRDT().decode(s.getCommand());
+                CRDT.Character ch = msg.getCharacter();
+                if (msg.getType() == 1) {
+                    controller.getCRDT().insertChar(ch);
+                } else if (msg.getType() == 2) {
+                    controller.addDeletionBuffer(ch);
+                }
+                controller.updateDeletionBuffer();
+            }
+        }
+    }
 }

@@ -149,8 +149,6 @@ Kedua, program kami masih belum mengimplementasikan algoritma secara efektif seh
 
 ### Kasus Uji
 
-*Beberapa kasus uji yang kalian gunakan untuk menguji kebenaran program kalian (minimal empat kasus uji)*
-
 ### Screenshot / Video Program
 
-*Screenshot / video demo program kalian yang bekerja*
+

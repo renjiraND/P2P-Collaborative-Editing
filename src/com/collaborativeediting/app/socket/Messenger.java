@@ -3,7 +3,6 @@ package com.collaborativeediting.app.socket;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-//kelas ini memiliki fungsi untuk melakukan broadcast objek operasi dan menerima broadcast objek operasi
 public class Messenger {
 
     private ArrayList<Thread> ClientList;
@@ -15,7 +14,7 @@ public class Messenger {
     public Messenger() {
         this.ClientList = new ArrayList<>();
         this.myServer = new Server();
-        this.listener = new Listener(this,(Server) this.myServer);
+        this.listener = new Listener(this, (Server) this.myServer);
     }
 
     public void initialize() {
@@ -23,25 +22,24 @@ public class Messenger {
         this.myServer.start();
     }
 
-    public void broadcast(String message){
-        for (Thread client: this.ClientList) {
+    public void broadcast(String message) {
+        for (Thread client : this.ClientList) {
             Client c = (Client) client;
             c.write(message);
         }
     }
 
-    public void autoAddClient(){
+    public void autoAddClient() {
         Server server = (Server) myServer;
-        if (server.getIncomingClient() != null){
-            Thread client = new Client(server.getIncomingClient(),null);
+        if (server.getIncomingClient() != null) {
+            Thread client = new Client(server.getIncomingClient(), null);
             client.start();
             this.ClientList.add(client);
             server.clearIncomingClient();
         }
     }
 
-    public void checkIncomingPort(){
-
+    public void checkIncomingPort() {
     }
 
     public String getBuffer() {
@@ -64,7 +62,7 @@ public class Messenger {
     }
 
     public void listClient() {
-        for (Thread client: this.ClientList) {
+        for (Thread client : this.ClientList) {
             Client c = (Client) client;
             System.out.println(c.getPortToConnect());
         }
@@ -76,24 +74,20 @@ public class Messenger {
 
 }
 
-class Listener extends Thread
-{
+class Listener extends Thread {
     final Server server;
     final Messenger messenger;
 
     // Constructor
-    public Listener(Messenger messenger, Server server)
-    {
+    public Listener(Messenger messenger, Server server) {
         this.messenger = messenger;
         this.server = server;
     }
 
     @Override
-    public void run()
-    {
-        while (true)
-        {
-            if(! server.getReceiveBuffer().equals("")){
+    public void run() {
+        while (true) {
+            if (!server.getReceiveBuffer().equals("")) {
                 this.messenger.setBuffer(server.getReceiveBuffer());
             }
             this.messenger.autoAddClient();

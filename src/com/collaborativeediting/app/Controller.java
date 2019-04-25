@@ -24,20 +24,25 @@ public class Controller {
         return crdt;
     }
 
+    public void insertRemote(CRDT.Character character) {
+
+    }
+
     public void addDeletionBuffer(CRDT.Character c) {
         this.deletionBuffer.add(c);
     }
 
     public void updateDeletionBuffer() {
         if (!this.deletionBuffer.isEmpty()) {
-            for (CRDT.Character c: this.deletionBuffer) {
+            for (CRDT.Character c : this.deletionBuffer) {
                 boolean found = false;
                 ListIterator litr = this.crdt.getCharacters().listIterator();
                 while (litr.hasNext() && !found) {
                     CRDT.Character currentChar = (CRDT.Character) litr.next();
                     if (c.isEqualTo(currentChar)) {
-                        this.crdt.deleteChar(currentChar);
+                        int crntCharPos = this.crdt.deleteChar(currentChar);
                         this.deletionBuffer.remove(c);
+                        this.frame.removeChar(crntCharPos);
                         found = true;
                     }
                 }
@@ -52,9 +57,7 @@ public class Controller {
     /*** CLASS ***/
     public class KeyEditorListener extends KeyAdapter {
         @Override
-        public void keyTyped(KeyEvent e) {
-
-        }
+        public void keyTyped(KeyEvent e) { }
 
         @Override
         public void keyPressed(KeyEvent e) {
@@ -62,12 +65,12 @@ public class Controller {
             switch (keyCode) {
                 case KeyEvent.VK_LEFT:          // left arrow
                     if (frame.getCursorIdx() > 0) {
-                        frame.setCursorIdx(frame.getCursorIdx()-1);
+                        frame.setCursorIdx(frame.getCursorIdx() - 1);
                     }
                     break;
                 case KeyEvent.VK_RIGHT:         // right arrow
                     if (frame.getCursorIdx() < frame.getCharCount()) {
-                        frame.setCursorIdx(frame.getCursorIdx()+1);
+                        frame.setCursorIdx(frame.getCursorIdx() + 1);
                     }
                     break;
                 case KeyEvent.VK_UP:            // up arrow
@@ -79,35 +82,33 @@ public class Controller {
                     frame.setCursorPosition();
                     break;
                 case KeyEvent.VK_BACK_SPACE:    // backspace
-                    if (frame.getCursorIdx() > 0)
-                    {
-                        frame.setCharCount(frame.getCharCount()-1);
-                        frame.setCursorIdx(frame.getCursorIdx()-1);
+                    if (frame.getCursorIdx() > 0) {
+                        frame.setCharCount(frame.getCharCount() - 1);
+                        frame.setCursorIdx(frame.getCursorIdx() - 1);
                         CRDT.Character ch = crdt.getCharacters().get(frame.getCursorIdx());
-                        crdt.deleteChar(ch);
+                        int cPosition = crdt.deleteChar(ch);
                     }
                     break;
                 case KeyEvent.VK_DELETE:        // delete
-                    if (frame.getCursorIdx() < frame.getCharCount())
-                    {
-                        frame.setCharCount(frame.getCharCount()-1);
+                    if (frame.getCursorIdx() < frame.getCharCount()) {
+                        frame.setCharCount(frame.getCharCount() - 1);
                         CRDT.Character ch = crdt.getCharacters().get(frame.getCursorIdx());
-                        crdt.deleteChar(ch);
+                        int cPosition = crdt.deleteChar(ch);
                     }
                     break;
                 default:
                     if (isValidChar(keyCode)) { // alphabet, digit, space
                         CRDT.Character ch = crdt.new Character(e.getKeyChar(), crdt.generatePos(frame.getCursorIdx()));
-                        crdt.insertChar(ch, frame.getCursorIdx());
-                        frame.setCharCount(frame.getCharCount()+1);
-                        frame.setCursorIdx(frame.getCursorIdx()+1);
+                        int cPosition = crdt.insertChar(ch);
+                        frame.setCharCount(frame.getCharCount() + 1);
+                        frame.setCursorIdx(frame.getCursorIdx() + 1);
                     }
             }
             frame.updateFooter();
         }
 
         @Override
-        public void keyReleased(KeyEvent e) {}
+        public void keyReleased(KeyEvent e) { }
 
         private boolean isValidChar(int keycode) {
             return (48 <= keycode) && (keycode <= 57)   // digit

@@ -151,4 +151,8 @@ Kedua, program kami masih belum mengimplementasikan algoritma secara efektif seh
 
 ### Screenshot / Video Program
 
+![](https://gitlab.informatika.org/shevalda/peer2peer-collaborative-editing/blob/master/screenshot/messageImage_1556156715818.jpg)
 
+![](https://gitlab.informatika.org/shevalda/peer2peer-collaborative-editing/blob/master/screenshot/messageImage_1556156744304.jpg)
+
+![](https://gitlab.informatika.org/shevalda/peer2peer-collaborative-editing/blob/master/screenshot/messageImage_1556156781938.jpg)

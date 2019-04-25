@@ -15,13 +15,13 @@ public class Version {
         this.exceptions = new ArrayList<>();
     }
 
-    public void updateVersion(Version version){
+    public void updateVersion(Version version) {
         final int incomingCounter = version.counter;
         if (incomingCounter <= this.counter) {
-        final int index = this.exceptions.indexOf(incomingCounter);
-        if(index >= 0){
-            this.exceptions.remove(index);
-        }
+            final int index = this.exceptions.indexOf(incomingCounter);
+            if (index >= 0) {
+                this.exceptions.remove(index);
+            }
         } else if (incomingCounter == this.counter + 1) {
             this.counter = this.counter + 1;
         } else {

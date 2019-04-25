@@ -4,7 +4,8 @@ import com.collaborativeediting.app.Controller;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 public class GUIFrame extends JFrame {
     private JPanel panel;
@@ -16,7 +17,7 @@ public class GUIFrame extends JFrame {
 
     public GUIFrame(Controller.KeyEditorListener keyEditorListener) {
         super();
-        
+
         this.setTitle("P2P Collaborative Editor");
         this.setSize(600, 600);
         this.setLocationRelativeTo(null);
@@ -45,14 +46,22 @@ public class GUIFrame extends JFrame {
             public void mouseClicked(MouseEvent e) {
                 textAreaEditor.setCaretPosition(charCount);
             }
+
             @Override
-            public void mousePressed(MouseEvent e) { }
+            public void mousePressed(MouseEvent e) {
+            }
+
             @Override
-            public void mouseReleased(MouseEvent e) { }
+            public void mouseReleased(MouseEvent e) {
+            }
+
             @Override
-            public void mouseEntered(MouseEvent e) { }
+            public void mouseEntered(MouseEvent e) {
+            }
+
             @Override
-            public void mouseExited(MouseEvent e) { }
+            public void mouseExited(MouseEvent e) {
+            }
         });
 
         JScrollPane editorScrollPane = new JScrollPane(this.textAreaEditor);
@@ -64,7 +73,8 @@ public class GUIFrame extends JFrame {
         this.panel.add(editorScrollPane, cst);
 
         /*** character index label ***/
-        cursorIdx = 0; charCount = 0;
+        cursorIdx = 0;
+        charCount = 0;
         this.labelCursorIdx = new JLabel("Cursor position: " + this.cursorIdx + " | Character count: " + this.charCount);
         this.labelCursorIdx.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 12));
         cst.fill = GridBagConstraints.CENTER;
@@ -103,6 +113,10 @@ public class GUIFrame extends JFrame {
     }
 
     public void removeChar(int position) {
-        this.textAreaEditor.replaceRange("", position, position+1);
+        this.textAreaEditor.replaceRange("", position, position + 1);
+    }
+
+    public void addChar(char character, int position) {
+        this.textAreaEditor.insert(String.valueOf(character), position);
     }
 }

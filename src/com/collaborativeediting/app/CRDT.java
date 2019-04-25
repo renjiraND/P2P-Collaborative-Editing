@@ -1,6 +1,5 @@
 package com.collaborativeediting.app;
 
-import javax.smartcardio.CommandAPDU;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,14 +26,14 @@ public class CRDT {
 
     public String getString() {
         StringBuilder charInString = new StringBuilder(this.characters.size());
-        for (Character c: characters) {
+        for (Character c : characters) {
             charInString.append(c.getValue());
         }
         return charInString.toString();
     }
 
     public void printCharacters() {
-        for (Character c: characters) {
+        for (Character c : characters) {
             System.out.println("char: " + c.getValue() + "; position: " + c.getPosition()
                 + "; site: " + c.getSiteId() + "; counter: " + c.getSiteCounter());
         }
@@ -44,11 +43,11 @@ public class CRDT {
     public void insert(char c, int position) {
         counter++;
         if (position == getCharactersCount()) {
-            this.characters.add(position, new Character(c, position+1));
+            this.characters.add(position, new Character(c, position + 1));
         } else if (position == 0) {
             this.characters.add(position, new Character(c, getCharacter(0).getPosition() / 2));
         } else {
-            double newPosition = (getCharacter(position-1).getPosition() + getCharacter(position).getPosition()) / 2;
+            double newPosition = (getCharacter(position - 1).getPosition() + getCharacter(position).getPosition()) / 2;
             this.characters.add(position, new Character(c, newPosition));
         }
         printCharacters();
@@ -56,18 +55,35 @@ public class CRDT {
 
     public double generatePos(int position) {
         if (position == getCharactersCount()) {
-            return position+1;
+            return position + 1;
         } else if (position == 0) {
             return getCharacter(0).getPosition() / 2;
         } else {
-            return  (getCharacter(position-1).getPosition() + getCharacter(position).getPosition()) / 2;
+            return (getCharacter(position - 1).getPosition() + getCharacter(position).getPosition()) / 2;
         }
     }
 
-    public void insertChar(Character c, int position) {
+    public int insertChar(Character insertedChar) {
         counter++;
-        this.characters.add(position, c);
+        int position = 0;
+        int i = 0;
+        while (i < this.characters.size()) {
+            Character crntChar = this.characters.get(i);
+            if (insertedChar.getPosition() < crntChar.getPosition()) {
+                break;
+            } else if (insertedChar.getPosition() == crntChar.getPosition()) {
+                if (insertedChar.getSiteCounter() > crntChar.getSiteCounter()) {
+                    if ((i+1) == this.characters.size()) {
+                        i += 1;
+                    }
+                }
+                break;
+            }
+            i++;
+        }
+        this.characters.add(position, insertedChar);
         printCharacters();
+        return i;
     }
 
     public void delete(int position) {
@@ -76,10 +92,12 @@ public class CRDT {
         printCharacters();
     }
 
-    public void deleteChar(Character c) {
+    public int deleteChar(Character c) {
         counter++;
+        int cPosition = this.characters.indexOf(c);
         this.characters.remove(c);
         printCharacters();
+        return cPosition;
     }
 
     public Message decode(String str) {

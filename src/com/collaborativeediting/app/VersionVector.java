@@ -2,7 +2,6 @@ package com.collaborativeediting.app;
 
 import java.util.ArrayList;
 
-//    kelas ini memiliki fungsi untuk menyimpan version vector yang dimiliki oleh sebuah node (id-node dan counter operasi)
 public class VersionVector {
 
     private ArrayList<Version> versions;
@@ -21,13 +20,13 @@ public class VersionVector {
     public void update(Version incomingVersion) {
         final Version existingVersion = this.versions.get(this.versions.indexOf(incomingVersion));
 
-        if (existingVersion != null){
+        if (existingVersion != null) {
             final Version newVersion = new Version(incomingVersion.getSiteId());
 
             newVersion.updateVersion(incomingVersion);
             this.versions.add(newVersion);
         } else {
-          existingVersion.updateVersion(incomingVersion);
+            existingVersion.updateVersion(incomingVersion);
         }
     }
 
@@ -39,7 +38,7 @@ public class VersionVector {
         final boolean isLower = incomingVersion.getCounter() <= localIncomingVersion.getCounter();
         final boolean isInException = localIncomingVersion.getExceptions().contains(incomingVersion.getCounter());
 
-        return  isLower && !isInException;
+        return isLower && !isInException;
     }
 
     private Version getVersionFromVector(Version incomingVersion) {
